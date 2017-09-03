@@ -1,7 +1,7 @@
 #include "Draw.hpp"
 #include "GL.hpp"
-
-#include <SDL.h>
+#include "game.h"
+#include <SDL2/SDL.h>
 #include <glm/glm.hpp>
 
 #include <chrono>
@@ -76,30 +76,29 @@ int main(int argc, char **argv) {
 
 	//------------  game state ------------
 
-	glm::vec2 mouse = glm::vec2(0.0f, 0.0f);
-	glm::vec2 ball = glm::vec2(0.0f, 0.0f);
-	glm::vec2 ball_velocity = glm::vec2(0.5f, 0.5f);
+	float curr_target_size = 1.5;
+	TennisForOne game(config.size.x, config.size.y, curr_target_size, "Round 1");
 
 	//------------  game loop ------------
 
 	auto previous_time = std::chrono::high_resolution_clock::now();
 	bool should_quit = false;
+	
 	while (true) {
 		static SDL_Event evt;
 		while (SDL_PollEvent(&evt) == 1) {
 			//handle input:
-			if (evt.type == SDL_MOUSEMOTION) {
-				mouse.x = (evt.motion.x + 0.5f) / float(config.size.x) * 2.0f - 1.0f;
-				mouse.y = (evt.motion.y + 0.5f) / float(config.size.y) *-2.0f + 1.0f;
-			} else if (evt.type == SDL_MOUSEBUTTONDOWN) {
-				ball = mouse;
-				ball_velocity = glm::vec2(0.5f, 0.5f);
-			} else if (evt.type == SDL_KEYDOWN && evt.key.keysym.sym == SDLK_ESCAPE) {
-				should_quit = true;
-			} else if (evt.type == SDL_QUIT) {
+			if (evt.type == SDL_QUIT)
+			{
 				should_quit = true;
 				break;
 			}
+			else if (evt.type == SDL_KEYDOWN && evt.key.keysym.sym == SDLK_ESCAPE) {
+				should_quit = true;
+				break;
+			}
+			game.processInput(evt);
+			
 		}
 		if (should_quit) break;
 
@@ -108,23 +107,42 @@ int main(int argc, char **argv) {
 		previous_time = current_time;
 
 		{ //update game state:
-			ball += elapsed * ball_velocity;
-			if (ball.x < -1.0f) ball_velocity.x = std::abs(ball_velocity.x);
-			if (ball.x >  1.0f) ball_velocity.x =-std::abs(ball_velocity.x);
-			if (ball.y < -1.0f) ball_velocity.y = std::abs(ball_velocity.y);
-			if (ball.y >  1.0f) ball_velocity.y =-std::abs(ball_velocity.y);
+			
+			if (!game.timeElapsed(elapsed))
+			{
+				// Game is either Lost or Won.
+
+				// If it's Lost.
+				if( game.isLost() )
+				{	
+					// Exit immediately.
+					should_quit = true;
+					break;
+				}
+
+				// Reset the game to the next round.
+				game = TennisForOne(config.size.x, config.size.y, curr_target_size / 2, "Round X");
+				curr_target_size = curr_target_size / 2;
+				if (curr_target_size < 0.25)
+				{
+					should_quit = true;
+					break;
+				}
+
+			}
 		}
 
 		//draw output:
 		glClearColor(0.0, 0.0, 0.0, 0.0);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-
+		
 		{ //draw game state:
-			Draw draw;
+			/*Draw draw;
 			draw.add_rectangle(mouse + glm::vec2(-0.1f,-0.1f), mouse + glm::vec2(0.1f, 0.1f), glm::u8vec4(0xff, 0xff, 0x00, 0xff));
 			draw.add_rectangle(ball + glm::vec2(-0.05f,-0.05f), ball + glm::vec2(0.05f, 0.05f), glm::u8vec4(0xff, 0x00, 0xff, 0xff));
-			draw.draw();
+			draw.draw();*/
+			game.draw();
 		}
 
 
