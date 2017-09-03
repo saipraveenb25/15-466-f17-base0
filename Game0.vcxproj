@@ -81,7 +81,7 @@
       <TargetMachine>MachineX86</TargetMachine>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>D:\CMU\Fall 2017\15-666 Computer Game Programming\Assignments\15-466-f17-base0\kit-libs-win\out\lib\SDL2.lib;D:\CMU\Fall 2017\15-666 Computer Game Programming\Assignments\15-466-f17-base0\kit-libs-win\out\lib\SDL2main.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>D:\CMU\Fall 2017\15-666 Computer Game Programming\Assignments\15-466-f17-base0\kit-libs-win\out\lib\SDL2.lib;D:\CMU\Fall 2017\15-666 Computer Game Programming\Assignments\15-466-f17-base0\kit-libs-win\out\lib\SDL2main.lib;D:\CMU\Fall 2017\15-666 Computer Game Programming\Assignments\15-466-f17-base0\kit-libs-win\out\lib\freeglut.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

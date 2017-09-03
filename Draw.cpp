@@ -51,7 +51,6 @@ void Draw::draw() {
 			"	fragColor = color;\n"
 			"}\n"
 		);
-
 		program = glCreateProgram();
 		glAttachShader(program, vertex_shader);
 		glAttachShader(program, fragment_shader);

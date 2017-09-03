@@ -1,19 +1,22 @@
 #include "Draw.hpp"
-#include "GL.hpp"
 #include "game.h"
 #include <SDL2/SDL.h>
 #include <glm/glm.hpp>
-
+#include <sstream>
 #include <chrono>
 #include <iostream>
+//#include <windows.h>
+//#include <GL/GL.h>
+//#include <GL/GLU.h>
+#include "GL.hpp"
 
 int main(int argc, char **argv) {
 	//Configuration:
 	struct {
 		std::string title = "Game0: Tennis For One";
-		glm::uvec2 size = glm::uvec2(640, 480);
+		glm::uvec2 size = glm::uvec2(640, 640);
 	} config;
-
+	
 	//------------  initialization ------------
 
 	//Initialize SDL library:
@@ -75,9 +78,16 @@ int main(int argc, char **argv) {
 	SDL_ShowCursor(SDL_DISABLE);
 
 	//------------  game state ------------
-
+	int strikes = 0; // Count losses.
+	int round = 0; // Round number;
 	float curr_target_size = 1.5;
-	TennisForOne game(config.size.x, config.size.y, curr_target_size, "Round 1");
+	std::stringstream round_text;
+	round_text << "ROUND " << round;
+	std::stringstream strike_text;
+	round_text << "Strike " << round << "/3";
+
+	
+	TennisForOne game(config.size.x, config.size.y, curr_target_size, round_text.str());
 
 	//------------  game loop ------------
 
@@ -115,14 +125,51 @@ int main(int argc, char **argv) {
 				// If it's Lost.
 				if( game.isLost() )
 				{	
-					// Exit immediately.
-					should_quit = true;
-					break;
+					// Reset game to the same round.
+					curr_target_size = curr_target_size;
+					strikes++;
+					
+					if (strikes == 3)
+					{
+
+						// clear the screen
+						//glClearColor(0.0, 0.0, 0.0, 0.0);
+						//glClear(GL_COLOR_BUFFER_BIT);
+
+						//glRasterPos2f(-0.5, -0.5f);
+						//glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_10, (unsigned char*)"FAILED");
+
+						//SDL_GL_SwapWindow(window);
+						// Wait a little while.
+						//SDL_Delay(2000);
+
+						// Then exit
+						should_quit = true;
+						break;
+					}
+
+					// clear the screen
+					//glClearColor(0.0, 0.0, 0.0, 0.0);
+					//glClear(GL_COLOR_BUFFER_BIT);
+					
+					//glRasterPos2f(-0.5, -0.5f);
+					//glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_10, (unsigned char*) strike_text.str().c_str());
+
+					//SDL_GL_SwapWindow(window);
+					// Wait a little while.
+					SDL_Delay(2000);
+
+					
+				}
+				else 
+				{
+					curr_target_size = curr_target_size / 2;
 				}
 
+
 				// Reset the game to the next round.
-				game = TennisForOne(config.size.x, config.size.y, curr_target_size / 2, "Round X");
-				curr_target_size = curr_target_size / 2;
+				game = TennisForOne(config.size.x, config.size.y, curr_target_size, "Round X");
+				
 				if (curr_target_size < 0.25)
 				{
 					should_quit = true;
