@@ -1,20 +1,10 @@
-# Base0
-
-Base0 is the starter code for the game0 in the 15-466-f17 course. It was developed by Jim McCann, and is hereby released into the public domain.
-
-Note that Base0 is attempting to illustrate a very straightfoward "get it done" philosophy of game code design -- I've purposefully removed some of the conveniences one typically uses to sweep things under the rug.
-
-This is because game0 *does not need* such conveniences. It is simple because game0 is simple.
-
-## Requirements
-
- - glm
- - libSDL2
- - modern C++ compiler
-
-On Linux or OSX these requirements should be available from your package manager without too much hassle.
+# TennisForOne
 
 ## Building
+The following commands should work on their respective platforms.
+However the only way that is fully tested is to load the .vcxproj file into Visual Studio 2017 CE and run it from there. The cl.exe command should also work on Windows.
+
+On Linux and OSX, the commands have been copied from Base0 readme, but have not been tested with the latest version of the TennisForOne code.
 
 ### Linux
 ```
@@ -46,7 +36,6 @@ Now you can:
 ```
 or:
 ```
-  cl.exe /EHsc /W3 /WX /MD /Ikit-libs-win\out\include /Ikit-libs-win\out\include\SDL2 main.cpp Draw.cpp gl_shims.cpp /link /SUBSYSTEM:CONSOLE /LIBPATH:kit-libs-win\out\lib SDL2main.lib SDL2.lib OpenGL32.lib
+  cl.exe /EHsc /W3 /WX /MD /Ikit-libs-win\out\include main.cpp Draw.cpp gl_shims.cpp /link /SUBSYSTEM:CONSOLE /LIBPATH:kit-libs-win\out\lib SDL2main.lib SDL2.lib OpenGL32.lib
   copy kit-libs-win\out\dist\SDL2.dll .
 ```
-
